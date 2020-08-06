@@ -2,11 +2,20 @@ package ru.titov.smartsoft.domain;
 
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import org.hibernate.annotations.NaturalId;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "quotes")
 public class Valute {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @JacksonXmlProperty(localName = "ID", isAttribute = true)
-    private String id;
+    private String valuteId;
 
     @JacksonXmlProperty(localName = "NumCode")
     private int numCode;
@@ -26,7 +35,7 @@ public class Valute {
     public Valute() {
     }
 
-    public Valute(String id, int numCode, String charCode, int nominal, String name, String value) {
+    public Valute(Long id, int numCode, String charCode, int nominal, String name, String value) {
         this.id = id;
         this.numCode = numCode;
         this.charCode = charCode;
@@ -35,11 +44,11 @@ public class Valute {
         this.value = value;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -77,6 +86,14 @@ public class Valute {
 
     public String getValue() {
         return value;
+    }
+
+    public String getValuteId() {
+        return valuteId;
+    }
+
+    public void setValuteId(String valuteId) {
+        this.valuteId = valuteId;
     }
 
     public void setValue(String value) {
