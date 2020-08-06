@@ -1,8 +1,10 @@
 package ru.titov.smartsoft.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.titov.smartsoft.domain.User;
+import org.springframework.stereotype.Repository;
+import ru.titov.smartsoft.entity.User;
 
+@Repository
 public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String username);
 }

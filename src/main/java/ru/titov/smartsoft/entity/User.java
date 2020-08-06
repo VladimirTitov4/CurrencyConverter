@@ -1,4 +1,6 @@
-package ru.titov.smartsoft.domain;
+package ru.titov.smartsoft.entity;
+
+import ru.titov.smartsoft.domain.Role;
 
 import javax.persistence.*;
 import java.util.Set;

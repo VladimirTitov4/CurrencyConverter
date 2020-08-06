@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.titov.smartsoft.domain.Role;
-import ru.titov.smartsoft.domain.User;
+import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.repository.UserRepo;
 
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class RegistrationController {
         User userFromDb = userRepo.findByUsername(user.getUsername());
 
         if (userFromDb != null) {
-            model.put("message", "User exists!");
+            model.put("message", "User is already exists!");
             return "registration";
         }
 
