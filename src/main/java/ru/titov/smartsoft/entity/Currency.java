@@ -1,47 +1,23 @@
-package ru.titov.smartsoft.domain;
-
-
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import org.hibernate.annotations.NaturalId;
+package ru.titov.smartsoft.entity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "quotes")
-public class Valute {
+public class Currency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JacksonXmlProperty(localName = "ID", isAttribute = true)
     private String valuteId;
-
-    @JacksonXmlProperty(localName = "NumCode")
-    private int numCode;
-
-    @JacksonXmlProperty(localName = "CharCode")
+    private String numCode;
     private String charCode;
-
-    @JacksonXmlProperty(localName = "Nominal")
     private int nominal;
-
-    @JacksonXmlProperty(localName = "Name")
     private String name;
-
-    @JacksonXmlProperty(localName = "Value")
     private String value;
 
-    public Valute() {
-    }
-
-    public Valute(Long id, int numCode, String charCode, int nominal, String name, String value) {
-        this.id = id;
-        this.numCode = numCode;
-        this.charCode = charCode;
-        this.nominal = nominal;
-        this.name = name;
-        this.value = value;
+    public Currency() {
     }
 
     public Long getId() {
@@ -52,11 +28,19 @@ public class Valute {
         this.id = id;
     }
 
-    public int getNumCode() {
+    public String getValuteId() {
+        return valuteId;
+    }
+
+    public void setValuteId(String valuteId) {
+        this.valuteId = valuteId;
+    }
+
+    public String getNumCode() {
         return numCode;
     }
 
-    public void setNumCode(int numCode) {
+    public void setNumCode(String numCode) {
         this.numCode = numCode;
     }
 
@@ -86,14 +70,6 @@ public class Valute {
 
     public String getValue() {
         return value;
-    }
-
-    public String getValuteId() {
-        return valuteId;
-    }
-
-    public void setValuteId(String valuteId) {
-        this.valuteId = valuteId;
     }
 
     public void setValue(String value) {

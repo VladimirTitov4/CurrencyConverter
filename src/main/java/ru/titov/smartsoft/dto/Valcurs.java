@@ -1,4 +1,4 @@
-package ru.titov.smartsoft.domain;
+package ru.titov.smartsoft.dto;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -16,7 +16,7 @@ public class Valcurs {
     private String name;
 
     @JacksonXmlElementWrapper(localName = "Valute", useWrapping = false)
-    @JacksonXmlProperty(localName = "Valute", isAttribute = false)
+    @JacksonXmlProperty(localName = "Valute")
     private List<Valute> valute;
 
     public Valcurs() {

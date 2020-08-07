@@ -3,10 +3,10 @@ package ru.titov.smartsoft.controllers;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.titov.smartsoft.domain.Valcurs;
-import ru.titov.smartsoft.domain.Valute;
+import ru.titov.smartsoft.dto.Valcurs;
+import ru.titov.smartsoft.dto.Valute;
+import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.repository.QuotesRepo;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
@@ -32,8 +32,17 @@ public class CurrencyController {
     public String saveCurrencies() throws Exception {
         Valcurs valcurs = getData();
 
+
+
         for (Valute valute : valcurs.getValute()) {
-            currencyRepo.save(valute);
+            Currency currency = new Currency();
+            currency.setValuteId(valute.getValuteId());
+            currency.setNumCode(valute.getNumCode());
+            currency.setCharCode(valute.getCharCode());
+            currency.setNominal(valute.getNominal());
+            currency.setName(valute.getName());
+            currency.setValue(valute.getValue());
+            currencyRepo.save(currency);
         }
 
         return "redirect:/login";
