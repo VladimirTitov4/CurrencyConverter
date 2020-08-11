@@ -1,6 +1,6 @@
 package ru.titov.smartsoft.entity;
 
-import ru.titov.smartsoft.domain.Role;
+import ru.titov.smartsoft.dto.Role;
 
 import javax.persistence.*;
 import java.util.Set;
