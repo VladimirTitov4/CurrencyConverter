@@ -25,4 +25,8 @@ public class Currency {
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_FID", referencedColumnName = "CURRENCY_ID")
     private Quote quote;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_FID", referencedColumnName = "USER_ID")
+    private User user;
 }

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -23,7 +23,7 @@ public class Quote {
     private String name;
 
     @CreationTimestamp
-    private LocalDateTime created;
+    private LocalDate created;
 
     @OneToMany(mappedBy = "quote", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private List<Currency> currencies;
