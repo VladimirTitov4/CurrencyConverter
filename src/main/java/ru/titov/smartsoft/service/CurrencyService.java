@@ -2,9 +2,9 @@ package ru.titov.smartsoft.service;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import ru.titov.smartsoft.dto.Valcurs;
 import ru.titov.smartsoft.dto.Valute;
 import ru.titov.smartsoft.entity.Currency;
@@ -12,13 +12,11 @@ import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
-import ru.titov.smartsoft.util.DateTimeUtil;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -55,8 +53,9 @@ public class CurrencyService {
             currency.setUser(user);
             currencyRepository.save(currency);
         }
+    }
 
-        System.out.println(user.getId());
-        System.out.println(user.getUsername());
+    public List<Currency> loadCurrencies() {
+        return currencyRepository.findAll();
     }
 }
