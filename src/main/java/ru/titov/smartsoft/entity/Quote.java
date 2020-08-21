@@ -22,9 +22,6 @@ public class Quote {
     private String date;
     private String name;
 
-    @CreationTimestamp
-    private LocalDate created;
-
     @OneToMany(mappedBy = "quote", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private List<Currency> currencies;
 }
