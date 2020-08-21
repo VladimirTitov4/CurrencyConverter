@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>User edit</title>
+    <div th:replace="fragments/common :: header"></div>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/common :: navbar"></div>
+
+    User Editor
+
+    <form action="/user" th:object="${user}" method="post">
+        <input type="text" th:value="*{username}" name="username">
+<!--        <div th:each="role : ${user.getRoles()}">-->
+<!--            <label><input type="checkbox" name="${role}">${role}</label>-->
+<!--        </div>-->
+        <input type="text" value="${user.id}" name="userId">
+        <button type="submit">Save</button>
+    </form>
+
+</div>
+<div th:insert="fragments/common :: footer"></div>
+</body>
+</html>

@@ -3,16 +3,19 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Main page</title>
+    <div th:replace="fragments/common :: header"></div>
 </head>
 <body>
-<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
+<div class="container">
+    <div th:replace="fragments/common :: navbar"></div>
+    <h4 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h4>
 
-<a href="/currency">Show XML Data from URL</a>
+    <div sec:authorize="isAuthenticated()">
+        <a href="/currency">Show XML Data from URL</a>
 
-<a href="/user-details">User details</a>
+    </div>
 
+</div>
+<div th:insert="fragments/common :: footer"></div>
 </body>
 </html>

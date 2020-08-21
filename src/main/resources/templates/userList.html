@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Main page</title>
+    <div th:replace="fragments/common :: header"></div>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/common :: navbar"></div>
+
+    List of users:
+
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getUsername()}"></td>
+            <td th:each="role : ${user.getRoles()}">
+                <p th:text="${role}"></p>
+            </td>
+            <td><a href="/user/${user.id}">edit</a></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</div>
+<div th:insert="fragments/common :: footer"></div>
+</body>
+</html>

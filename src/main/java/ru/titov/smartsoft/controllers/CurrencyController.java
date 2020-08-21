@@ -2,22 +2,26 @@ package ru.titov.smartsoft.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.service.CurrencyService;
 
-@org.springframework.web.bind.annotation.RestController
-@RequestMapping("/currency")
+@Controller
 @RequiredArgsConstructor
+@RequestMapping("/currency")
 public class CurrencyController {
 
     private final CurrencyService currencyService;
 
     @GetMapping
-    public String saveCurrencies(@AuthenticationPrincipal User user) throws Exception {
-        currencyService.getXmlAndSaveToDb(user);
+    public String saveCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
+        //currencyService.getXmlAndSaveToDb(user);
 
-        return "SUCCESS";
+        model.addAttribute("currencies", currencyService.loadCurrencies());
+
+        return "currencies";
     }
 }
