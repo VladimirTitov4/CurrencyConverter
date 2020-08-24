@@ -29,13 +29,13 @@ public class CurrencyService {
     private final QuoteRepository quoteRepository;
 
     public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) throws Exception {
-        InputStream xmlResource = new URL("http://www.cbr.ru/scripts/XML_daily.asp").openStream();
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(xmlResource);
-        XmlMapper mapper = new XmlMapper();
-        Valcurs valcurs = mapper.readValue(xmlStreamReader, Valcurs.class);
-        
         if (!checkIsUpToDate()) {
+            InputStream xmlResource = new URL("http://www.cbr.ru/scripts/XML_daily.asp").openStream();
+            XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+            XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(xmlResource);
+            XmlMapper mapper = new XmlMapper();
+            Valcurs valcurs = mapper.readValue(xmlStreamReader, Valcurs.class);
+
             Quote quote = new Quote();
             quote.setName(valcurs.getName());
             quote.setDate(valcurs.getDate());
