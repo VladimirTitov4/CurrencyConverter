@@ -5,28 +5,28 @@
     <title>Main page</title>
     <div th:replace="fragments/common :: header"></div>
 </head>
+
 <body>
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
 
     <div sec:authorize="isAuthenticated()">
-        <a href="/currency">Show XML Data from URL</a>
-
+        <form action="/currency"  method="post">
             <div class="form-row text-center">
                 <div class="form-group col-md-4 mt-4">
                     <select th:field="*{currencies}" id="currency1" class="form-control" >
-                        <option th:each="c : ${currencies}" th:value="${c.getCharCode() + c.getName()}"
-                        th:text="${c.getCharCode() + c.getName()}"></option>
+                        <option th:each="c : ${currencies}" th:value="${c.getCharCode()}"
+                        th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
                     </select>
                 </div>
                 <div class="form-group col-md-4 ml-4 mt-4">
-                    <select id="currency2" class="form-control" th:field="*{currencies}">
-                        <option th:each="c : ${currencies}" th:value="${c.getCharCode() + c.getName()}"
-                                th:text="${c.getCharCode() + c.getName()}"></option>
+                    <select th:field="*{currencies}" id="currency2" class="form-control" >
+                        <option th:each="c : ${currencies}" th:value="${c.getCharCode()}"
+                                th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
                     </select>
                 </div>
             </div>
-        <form action="/currency"  method="post" >
+
             <div class="form-row">
                 <div class="form-group col-md-4 mt-4">
                     <input class="form-control" type="text" name="firstValue" placeholder="1"/>
@@ -40,12 +40,33 @@
     </div>
 
     <h4>Result</h4>
-    <p th:text="${firstValue}"></p>
-    <p th:text="${secondValue}"></p>
+        <div id="firstProcessedData"></div>
 
 
 
 </div>
 <div th:insert="fragments/common :: footer"></div>
 </body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#currency1').on('change', async function () {
+            let body = {
+                charCode: $(this).val()
+            }
+
+            let response = await fetch('/currency/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            })
+
+            let result = await response.json()
+            console.log(response)
+            console.log(result)
+            console.log(result.message)
+        })
+    })
+</script>
 </html>

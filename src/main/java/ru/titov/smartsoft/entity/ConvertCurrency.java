@@ -1,13 +1,14 @@
 package ru.titov.smartsoft.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import javax.persistence.Entity;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ConvertCurrency {
 
-    public String firstValue;
-    public String SecondValue;
-    public Long result;
+    public Currency firstCurrency;
+    public Currency SecondCurrency;
+
 }
