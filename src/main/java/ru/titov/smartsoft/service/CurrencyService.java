@@ -1,6 +1,5 @@
 package ru.titov.smartsoft.service;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
@@ -11,14 +10,12 @@ import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
+import ru.titov.smartsoft.util.Converter;
+import ru.titov.smartsoft.util.XmlParser;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import java.io.InputStream;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -29,53 +26,50 @@ public class CurrencyService {
     private final QuoteRepository quoteRepository;
 
     public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) throws Exception {
-        InputStream xmlResource = new URL("http://www.cbr.ru/scripts/XML_daily.asp").openStream();
-        XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
-        XMLStreamReader xmlStreamReader = xmlInputFactory.createXMLStreamReader(xmlResource);
-        XmlMapper mapper = new XmlMapper();
-        Valcurs valcurs = mapper.readValue(xmlStreamReader, Valcurs.class);
-        
-        if (!checkIsUpToDate()) {
+        Valcurs valcurs = XmlParser.getValcurs();
+        if (!checkIsUpToDate(valcurs)) {
             Quote quote = new Quote();
             quote.setName(valcurs.getName());
             quote.setDate(valcurs.getDate());
             quoteRepository.save(quote);
             
             for (Valute valute : valcurs.getValute()) {
-                Currency currency = new Currency();
-                currency.setValuteId(valute.getValuteId());
-                currency.setNumCode(valute.getNumCode());
-                currency.setCharCode(valute.getCharCode());
-                currency.setNominal(valute.getNominal());
-                currency.setName(valute.getName());
-                currency.setValue(valute.getValue());
-                currency.setQuote(quote);
-                currency.setUser(user);
-                currencyRepository.save(currency);
+                currencyRepository.save(Converter.toCurrencyEntity(valute, quote, user));
             }
         }
     }
 
-    public boolean checkIsUpToDate() throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        Date todayDate = new Date();
-        List<Quote> quotes = quoteRepository.findAll();
-        if (quotes.isEmpty()) {
-            System.out.println("Found nothing, saving Quotes for the first time");
+    public boolean checkIsUpToDate(Valcurs valcurs) {
+        Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
+        if (lastQuote == null) {
+            System.out.println("Found nothing, saving quotes for the first time");
+            return false;
         }
-        for (Quote quote : quotes) {
-            Date DbDate = sdf.parse(quote.getDate());
-            if (todayDate.before(DbDate) || todayDate.equals(DbDate)) {
-                System.out.println("Date is up to Date");
-                return true;
-            } else {
-                System.out.println("No suitable Date found, saving new Quotes to DB");
-            }
+        LocalDate DBDate = LocalDate.parse(lastQuote.getDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        LocalDate CBRDate = LocalDate.parse(valcurs.getDate(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        if (DBDate.equals(CBRDate)) {
+            System.out.println("Date is up to Date");
+            return true;
+        }
+        if (DBDate.isBefore(CBRDate)) {
+            System.out.println("Date is expired, saving new quotes");
+            return false;
+        }
+        if (DBDate.getDayOfWeek() == DayOfWeek.MONDAY
+                && CBRDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
+            System.out.println("Today is Monday and current quotes are good");
+            return true;
         }
         return false;
     }
 
-    public List<Currency> loadCurrencies() {
-        return currencyRepository.findAll();
+    public List<Currency> loadRecentCurrencies() {
+        Long lastId = quoteRepository.findFirstByOrderByIdDesc().getId();
+        return currencyRepository.findAllByQuote_Id(lastId);
+    }
+
+    public Currency getCurrencyByCharCode(String charCode) {
+        Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
+        return currencyRepository.findByCharCodeAndQuote(charCode, lastQuote);
     }
 }
