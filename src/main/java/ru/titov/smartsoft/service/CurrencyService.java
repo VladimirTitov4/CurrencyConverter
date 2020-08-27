@@ -69,6 +69,7 @@ public class CurrencyService {
     }
 
     public Currency getCurrencyByCharCode(String charCode) {
-        return currencyRepository.findByCharCode(charCode);
+        Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
+        return currencyRepository.findByCharCodeAndQuote(charCode, lastQuote);
     }
 }
