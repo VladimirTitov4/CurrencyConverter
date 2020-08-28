@@ -5,9 +5,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import ru.titov.smartsoft.dto.Valcurs;
 import ru.titov.smartsoft.dto.Valute;
+import ru.titov.smartsoft.entity.ConvertedCurrency;
 import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
+import ru.titov.smartsoft.repository.ConvertedCurrencyRepository;
 import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
 import ru.titov.smartsoft.util.Converter;
@@ -24,6 +26,7 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final QuoteRepository quoteRepository;
+    private final ConvertedCurrencyRepository convertedCurrencyRepository;
 
     public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) throws Exception {
         Valcurs valcurs = XmlParser.getValcurs();
@@ -71,5 +74,9 @@ public class CurrencyService {
     public Currency getCurrencyByCharCode(String charCode) {
         Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
         return currencyRepository.findByCharCodeAndQuote(charCode, lastQuote);
+    }
+
+    public void saveConversion(ConvertedCurrency convertedCurrency) {
+        convertedCurrencyRepository.save(convertedCurrency);
     }
 }

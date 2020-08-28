@@ -1,16 +1,21 @@
 package ru.titov.smartsoft.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
+@RequestMapping("/test")
 public class TestController {
 
-    @GetMapping("/currency/{code}")
-    public void get(@PathVariable String code) {
-        System.out.println(code);
+    @GetMapping
+    public String get() {
+        return "test";
     }
 
-
+    @PostMapping
+    public String handleData(
+            @RequestParam("country") String country) {
+        System.out.println(country);
+        return "test";
+    }
 }

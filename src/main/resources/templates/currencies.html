@@ -11,16 +11,16 @@
     <div th:replace="fragments/common :: navbar"></div>
 
 <!--    <div sec:authorize="isAuthenticated()">-->
-        <form action="/currency" name="currencyForm"  method="post">
+        <form th:action="@{/currency}" name="currencyForm"  method="post">
             <div class="form-row text-center">
                 <div class="form-group col-md-4 mt-4">
-                    <select th:field="*{currencies}" id="currency1" class="form-control" >
+                    <select th:name="currency1" id="currency1" class="form-control">
                         <option th:each="c : ${currencies}" th:value="${c.getCharCode()}"
                         th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
                     </select>
                 </div>
                 <div class="form-group col-md-4 ml-4 mt-4">
-                    <select th:field="*{currencies}" id="currency2" class="form-control" >
+                    <select th:name="currency2" id="currency2" class="form-control" >
                         <option th:each="c : ${currencies}" th:value="${c.getCharCode()}"
                                 th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
                     </select>
@@ -32,7 +32,7 @@
                     <input maxlength="10" id="firstCurrencyOutput" class="form-control" type="text" name="firstValue" placeholder="1"/>
                 </div>
                 <div class="form-group col-md-4 ml-4 mt-4">
-                    <input disabled id="secondCurrencyOutput" class="form-control" type="text" name="secondValue" placeholder="1"/>
+                    <input disabled id="secondCurrencyOutput" class="form-control" type="text" name="result" placeholder="1"/>
                 </div>
             </div>
             <button class="btn btn-primary mb-4" type="submit">Конвертировать</button>
