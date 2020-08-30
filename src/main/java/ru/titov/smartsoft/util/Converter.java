@@ -1,7 +1,7 @@
 package ru.titov.smartsoft.util;
 
 import lombok.experimental.UtilityClass;
-import ru.titov.smartsoft.dto.Valute;
+import ru.titov.smartsoft.dto.ValuteDto;
 import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
@@ -9,9 +9,9 @@ import ru.titov.smartsoft.entity.User;
 @UtilityClass
 public class Converter {
 
-    public Currency toCurrencyEntity(Valute valute, Quote quote, User user) {
+    public Currency toCurrencyEntity(ValuteDto valute, Quote quote, User user) {
         Currency currency = new Currency();
-        currency.setValuteId(valute.getValuteId());
+        currency.setValuteId(valute.getId());
         currency.setNumCode(valute.getNumCode());
         currency.setCharCode(valute.getCharCode());
         currency.setNominal(valute.getNominal());

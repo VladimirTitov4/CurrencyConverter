@@ -25,45 +25,9 @@ public class CurrencyController {
 
     @GetMapping
     public String getCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
-//        currencyService.getXmlAndSaveToDb(user);
+        currencyService.getXmlAndSaveToDb(user);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
         return "currencies";
-    }
-
-//    @PostMapping("/calculate")
-//    @ResponseBody
-//    public ConvertedCurrency convert(@RequestBody String jsonStr) throws IOException {
-//        System.out.println(jsonStr);
-//        byte[] jsonData = jsonStr.getBytes();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        JsonNode jsonNode = objectMapper.readTree(jsonData);
-//        JsonNode firstCharCode = jsonNode.path("firstCharCode");
-//        JsonNode amountRow = jsonNode.path("amount");
-//        JsonNode secondCharCode = jsonNode.path("secondCharCode");
-//        int amount = amountRow.asInt();
-//        if (amount < 1) amount = 1;
-//        Currency firstCurrencyFromDb = currencyService.getCurrencyByCharCode(firstCharCode.asText());
-//        Currency secondCurrencyFromDb = currencyService.getCurrencyByCharCode(secondCharCode.asText());
-//        return new ConvertedCurrency(
-//                new BigDecimal(firstCurrencyFromDb.getValue().replaceAll(",", ".")),
-//                new BigDecimal(secondCurrencyFromDb.getValue().replaceAll(",", ".")),
-//                new BigDecimal(firstCurrencyFromDb.getNominal()),
-//                new BigDecimal(secondCurrencyFromDb.getNominal()),
-//                new BigDecimal(amount));
-//    }
-
-    @PostMapping("/calculate")
-    @ResponseBody
-    public String convert(@RequestBody String jsonStr) {
-        JSONObject jsonObject = new JSONObject(jsonStr);
-        Currency firstCurrencyFromDb = currencyService.getCurrencyByCharCode(jsonObject.get("firstCharCode").toString());
-        Currency secondCurrencyFromDb = currencyService.getCurrencyByCharCode(jsonObject.get("secondCharCode").toString());
-        JSONObject resultJsonObject = new JSONObject();
-        resultJsonObject.put("firstValue", firstCurrencyFromDb.getValue());
-        resultJsonObject.put("firstNominal", firstCurrencyFromDb.getNominal());
-        resultJsonObject.put("secondValue", secondCurrencyFromDb.getValue());
-        resultJsonObject.put("secondNominal", secondCurrencyFromDb.getNominal());
-        return resultJsonObject.toString();
     }
 
     @PostMapping
