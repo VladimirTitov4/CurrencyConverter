@@ -1,20 +1,19 @@
 package ru.titov.smartsoft.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.titov.smartsoft.entity.ConvertedCurrency;
-import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.service.CurrencyService;
+import ru.titov.smartsoft.util.Converter;
 
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,21 +26,25 @@ public class CurrencyController {
     public String getCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
         currencyService.getXmlAndSaveToDb(user);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
+        model.addAttribute("history", currencyService.loadHistory(user));
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         return "currencies";
     }
 
     @PostMapping
     public String saveConversion(
+            @AuthenticationPrincipal User user,
             @RequestParam("currency1") String currency1,
             @RequestParam("currency2") String currency2,
             @RequestParam("firstValue") String firstValue,
-            @RequestParam("result") String result,
-            Model model) {
-        System.out.println(currency1);
-        System.out.println(currency2);
-        System.out.println(firstValue);
-        System.out.println(result);
+            @RequestParam(value = "result", required = false) String result,
+            Model model
+    ) {
+        ConvertedCurrency cc = Converter.getConvertedCurrencyEntity(user, currency1, currency2, firstValue, result);
+        currencyService.saveConversion(cc);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
+        model.addAttribute("history", currencyService.loadHistory(user));
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         return "currencies";
     }
 }

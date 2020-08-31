@@ -72,12 +72,11 @@ public class CurrencyService {
         return currencyRepository.findAllByQuote_Id(lastId);
     }
 
-    public Currency getCurrencyByCharCode(String charCode) {
-        Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
-        return currencyRepository.findByCharCodeAndQuote(charCode, lastQuote);
-    }
-
     public void saveConversion(ConvertedCurrency convertedCurrency) {
         convertedCurrencyRepository.save(convertedCurrency);
+    }
+
+    public List<ConvertedCurrency> loadHistory(User user) {
+        return convertedCurrencyRepository.findAllByUser(user);
     }
 }
