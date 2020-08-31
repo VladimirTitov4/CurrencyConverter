@@ -9,7 +9,15 @@
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
     <h3>Test page</h3>
-
+    <form th:action="@{/test}" method="post">
+        <select th:name="country">
+            <option value="de">Germany</option>
+            <option value="nl">Netherlands</option>
+            <option value="pl">Poland</option>
+            <option value="lv">Latvia</option>
+        </select>
+        <input type="submit"/>
+    </form>
 </div>
 <div th:insert="fragments/common :: footer"></div>
 </body>

@@ -17,11 +17,11 @@ public class Currency {
     private Long id;
 
     private String valuteId;
-    private String numCode;
+    private int numCode;
     private String charCode;
     private int nominal;
     private String name;
-    private String value;
+    private Double value;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_FID", referencedColumnName = "CURRENCY_ID")

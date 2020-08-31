@@ -1,19 +1,19 @@
 package ru.titov.smartsoft.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.titov.smartsoft.entity.ConvertedCurrency;
-import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.service.CurrencyService;
+import ru.titov.smartsoft.util.Converter;
 
-import java.io.IOException;
-import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,37 +23,28 @@ public class CurrencyController {
     private final CurrencyService currencyService;
 
     @GetMapping
-    public String saveCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
-//        currencyService.getXmlAndSaveToDb(user);
+    public String getCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
+        currencyService.getXmlAndSaveToDb(user);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
+        model.addAttribute("history", currencyService.loadHistory(user));
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         return "currencies";
     }
 
-    @PostMapping("/test")
-    @ResponseBody
-    public ConvertedCurrency test(@RequestBody String jsonStr) throws IOException {
-        byte[] jsonData = jsonStr.getBytes();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(jsonData);
-        JsonNode firstCharCode = jsonNode.path("firstCharCode");
-        JsonNode amountRow = jsonNode.path("amount");
-        JsonNode secondCharCode = jsonNode.path("secondCharCode");
-        int amount = amountRow.asInt();
-        if (amount < 1) amount = 1;
-        Currency firstCurrencyFromDb = currencyService.getCurrencyByCharCode(firstCharCode.asText());
-        Currency secondCurrencyFromDb = currencyService.getCurrencyByCharCode(secondCharCode.asText());
-        return new ConvertedCurrency(
-                new BigDecimal(firstCurrencyFromDb.getValue().replaceAll(",", ".")),
-                new BigDecimal(secondCurrencyFromDb.getValue().replaceAll(",", ".")),
-                new BigDecimal(firstCurrencyFromDb.getNominal()),
-                new BigDecimal(secondCurrencyFromDb.getNominal()),
-                new BigDecimal(amount));
-    }
-
     @PostMapping
-    public String convertCurrencies(Model model) {
+    public String saveConversion(
+            @AuthenticationPrincipal User user,
+            @RequestParam("currency1") String currency1,
+            @RequestParam("currency2") String currency2,
+            @RequestParam("firstValue") String firstValue,
+            @RequestParam(value = "result", required = false) String result,
+            Model model
+    ) {
+        ConvertedCurrency cc = Converter.getConvertedCurrencyEntity(user, currency1, currency2, firstValue, result);
+        currencyService.saveConversion(cc);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
-        System.out.println("form");
+        model.addAttribute("history", currencyService.loadHistory(user));
+        model.addAttribute("formatter", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         return "currencies";
     }
 }

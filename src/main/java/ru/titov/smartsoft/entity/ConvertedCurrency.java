@@ -1,41 +1,33 @@
 package ru.titov.smartsoft.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import javax.persistence.*;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class ConvertedCurrency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private BigDecimal firstCurrencyValue;
-    private BigDecimal secondCurrencyValue;
-    private BigDecimal firstCurrencyNominal;
-    private BigDecimal secondCurrencyNominal;
-    private BigDecimal amount;
-    private BigDecimal result;
+    private String firstCurrency;
+    private String SecondCurrency;
+    private String amountToConvert;
+    private String result;
 
-    public ConvertedCurrency(BigDecimal firstCurrencyValue,
-                             BigDecimal secondCurrencyValue,
-                             BigDecimal firstCurrencyNominal,
-                             BigDecimal secondCurrencyNominal,
-                             BigDecimal value
-    ) {
-        this.firstCurrencyValue = firstCurrencyValue;
-        this.secondCurrencyValue = secondCurrencyValue;
-        this.firstCurrencyNominal = firstCurrencyNominal;
-        this.secondCurrencyNominal = secondCurrencyNominal;
-        this.amount = value;
-        result = firstCurrencyValue.multiply(secondCurrencyNominal).multiply(amount)
-                .divide(secondCurrencyValue.multiply(firstCurrencyNominal), 4, RoundingMode.HALF_EVEN);
-    }
+    @CreationTimestamp
+    private LocalDate createdAt;
+
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "USER_FID", referencedColumnName = "USER_ID")
+    private User user;
 }

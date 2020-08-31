@@ -3,15 +3,17 @@ package ru.titov.smartsoft.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import ru.titov.smartsoft.dto.Valcurs;
-import ru.titov.smartsoft.dto.Valute;
+import ru.titov.smartsoft.dto.ValcursDto;
+import ru.titov.smartsoft.dto.ValuteDto;
+import ru.titov.smartsoft.entity.ConvertedCurrency;
 import ru.titov.smartsoft.entity.Currency;
 import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
+import ru.titov.smartsoft.feign.CurrencyFeignClient;
+import ru.titov.smartsoft.repository.ConvertedCurrencyRepository;
 import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
 import ru.titov.smartsoft.util.Converter;
-import ru.titov.smartsoft.util.XmlParser;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -24,22 +26,24 @@ public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final QuoteRepository quoteRepository;
+    private final ConvertedCurrencyRepository convertedCurrencyRepository;
+    private final CurrencyFeignClient currencyFeignClient;
 
     public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) throws Exception {
-        Valcurs valcurs = XmlParser.getValcurs();
+        ValcursDto valcurs = currencyFeignClient.getXmlDaily();
         if (!checkIsUpToDate(valcurs)) {
             Quote quote = new Quote();
             quote.setName(valcurs.getName());
             quote.setDate(valcurs.getDate());
             quoteRepository.save(quote);
             
-            for (Valute valute : valcurs.getValute()) {
+            for (ValuteDto valute : valcurs.getValutes()) {
                 currencyRepository.save(Converter.toCurrencyEntity(valute, quote, user));
             }
         }
     }
 
-    public boolean checkIsUpToDate(Valcurs valcurs) {
+    public boolean checkIsUpToDate(ValcursDto valcurs) {
         Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
         if (lastQuote == null) {
             System.out.println("Found nothing, saving quotes for the first time");
@@ -68,8 +72,11 @@ public class CurrencyService {
         return currencyRepository.findAllByQuote_Id(lastId);
     }
 
-    public Currency getCurrencyByCharCode(String charCode) {
-        Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
-        return currencyRepository.findByCharCodeAndQuote(charCode, lastQuote);
+    public void saveConversion(ConvertedCurrency convertedCurrency) {
+        convertedCurrencyRepository.save(convertedCurrency);
+    }
+
+    public List<ConvertedCurrency> loadHistory(User user) {
+        return convertedCurrencyRepository.findAllByUser(user);
     }
 }
