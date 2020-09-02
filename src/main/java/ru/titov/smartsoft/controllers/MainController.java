@@ -14,11 +14,4 @@ public class  MainController {
 
         return "main";
     }
-
-    @GetMapping("/user-details")
-    public String showUserInfo(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("currentUser", user);
-
-        return "user-details";
-    }
 }
