@@ -24,6 +24,8 @@ public class Converter {
     }
 
     public ConvertedCurrency getConvertedCurrencyEntity(User user, String c1, String c2, String amount, String result) {
+        if (amount.isEmpty()) amount = "1";
+        if (result.isEmpty()) result = "1";
         ConvertedCurrency cc = new ConvertedCurrency();
         cc.setFirstCurrency(c1.substring(0, c1.indexOf('|')-1));
         cc.setSecondCurrency(c2.substring(0, c2.indexOf('|')-1));
