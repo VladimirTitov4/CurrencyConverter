@@ -21,15 +21,15 @@
 
     <div th:fragment="navbar">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Currency Converter</a>
+            <a class="navbar-brand" href="/">Главная</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/currency">Конвертер валют</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <a class="nav-link" href="/user-details">User info</a>
@@ -39,9 +39,11 @@
                     </li>
                 </ul>
 
-                <div class="navbar-text mr-3">[[${#httpServletRequest.remoteUser}]]
+                <div class="navbar-text mr-3">
+
                     <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Sign Out"/>
+                        <span class="navbar-text">[[${#httpServletRequest.remoteUser}]]</span>
+                        <button sec:authorize="isAuthenticated()" class="btn btn-primary ml-4" type="submit">Sign Out</button>
                     </form>
                 </div>
 
