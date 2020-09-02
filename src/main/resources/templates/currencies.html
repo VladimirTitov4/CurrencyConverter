@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Main page</title>
+    <div th:replace="fragments/common :: header"></div>
+</head>
+
+<body>
+<div class="container">
+    <div th:replace="fragments/common :: navbar"></div>
+
+    <div sec:authorize="isAuthenticated()">
+        <form th:action="@{/currency}" name="currencyForm" method="post">
+            <div class="form-row text-center">
+                <div class="form-group col-md-4 mt-4">
+                    <select onchange="calculate()" th:name="currency1" id="currency1" class="form-control">
+                        <option th:each="c : ${currencies}"
+                                th:value="${c.getCharCode() + ' ('+ c.getName() + ') ' + '|' + c.getValue() * (1.0 / c.getNominal())}"
+                                th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 ml-4 mt-4">
+                    <select onchange="calculate()" th:name="currency2" id="currency2" class="form-control">
+
+                        <option th:each="c : ${currencies}"
+                                th:value="${c.getCharCode() + ' ('+ c.getName() + ') ' + '|' + c.getValue() * (1.0 / c.getNominal())}"
+                                th:text="${c.getCharCode() + ' ('+ c.getName() + ') '}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4 mt-4">
+                    <input oninput="calculate()" maxlength="10" id="firstCurrencyOutput" class="form-control"
+                           type="text" name="firstValue" placeholder="1"/>
+                </div>
+                <div class="form-group col-md-4 ml-4 mt-4">
+                    <input id="secondCurrencyOutput" class="form-control" type="text" name="result" placeholder="1"/>
+                </div>
+            </div>
+            <button class="btn btn-primary mb-4" type="submit">Конвертировать</button>
+        </form>
+    </div>
+
+    <h4>История</h4>
+    <form method="post" th:action="@{/currency/filter}">
+        <div class="input-group mb-4">
+            <div class="input-group-prepend">
+                <button type="button" id="toggle" class="input-group-text">
+                    <i class="fa fa-calendar-alt"></i>
+                </button>
+            </div>
+
+            <input type="text" id="picker" name="searchDate" class="form-control col-md-2">
+            <select name="currencyFromHistory1" class="form-control col-md-2 ml-4">
+                <option value="" selected></option>
+                <option th:each="c : ${currencies}" th:value="${c.getCharCode()}" th:text="${c.getCharCode()}"></option>
+            </select>
+            <select name="currencyFromHistory2" class="form-control col-md-2 ml-4">
+                <option value="" selected></option>
+                <option th:each="c : ${currencies}" th:value="${c.getCharCode()}" th:text="${c.getCharCode()}"></option>
+            </select>
+            <button class="btn btn-primary ml-4" type="submit">Поиск</button>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Исходная валюта</th>
+            <th scope="col">Целевая валюта</th>
+            <th scope="col">Исходная сумма</th>
+            <th scope="col">Получаемая сумма</th>
+            <th scope="col">Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${history.isEmpty()}">
+            <td colspan="5"> Нет доступной истории</td>
+        </tr>
+        <tr th:each="h : ${history}">
+            <td th:text="${h.getFirstCurrency()}"></td>
+            <td th:text="${h.getSecondCurrency()}"></td>
+            <td th:text="${h.getAmountToConvert()}"></td>
+            <td th:text="${h.getResult()}"></td>
+            <td th:text="${h.getCreatedAt().format(formatter)}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<div th:insert="fragments/common :: footer"></div>
+</body>
+<script src="js/jquery.datetimepicker.full.min.js"></script>
+<script>
+    $.datetimepicker.setDateFormatter('moment')
+    $('#picker').datetimepicker({
+        timepicker: false,
+        datepicker: true,
+        format: 'DD.MM.YYYY'
+    })
+    $('#toggle').on('click', function () {
+        $('#picker').datetimepicker('toggle')
+    })
+</script>
+<script>
+    function calculate() {
+
+        let currency1 = $("#currency1").val().substring($("#currency1").val().indexOf("|") + 1)
+        let currency2 = $("#currency2").val().substring($("#currency2").val().indexOf("|") + 1)
+        let amount = $("#firstCurrencyOutput").val()
+        if (!amount) {
+            amount = 1;
+        }
+        document.currencyForm.result.value = (Math.trunc((((currency1 * amount) / currency2)) * 100) / 100).toLocaleString('ru')
+    }
+</script>
+</html>

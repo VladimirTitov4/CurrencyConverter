@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Login</title>
+    <div th:replace="fragments/common :: header"></div>
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/common :: navbar"></div>
+
+    Add new user
+    <div th:if="${param.message}">
+        User already exists
+    </div>
+    <div th:if="${param.error}">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <form th:action="@{/registration}" method="post">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> User Name : </label>
+            <div class="col-sm-3">
+                <input class="form-control" type="text" name="username"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Password: </label>
+            <div class="col-sm-3">
+                <input type="password" name="password"/>
+            </div>
+        </div>
+
+        <button class="btn btn-primary mb-4" type="submit">Register</button>
+
+    </form>
+</div>
+<div th:insert="fragments/common :: footer"></div>
+</body>
+</html>
