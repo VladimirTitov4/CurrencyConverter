@@ -20,7 +20,7 @@ public class ConvertedCurrency {
     private Long id;
 
     private String firstCurrency;
-    private String SecondCurrency;
+    private String secondCurrency;
     private String amountToConvert;
     private String result;
 
