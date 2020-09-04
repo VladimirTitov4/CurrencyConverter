@@ -4,7 +4,9 @@
 <head>
     <title>Login</title>
     <div th:replace="fragments/common :: header"></div>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
+
 <body>
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
@@ -52,6 +54,10 @@
                 <input th:classappend="${emailError} ? 'is-invalid'" class="form-control" type="email" name="email" placeholder="some@some.com"/>
                 <div class="invalid-feedback" th:text="${emailError}"></div>
             </div>
+        </div>
+        <div>
+            <div class="g-recaptcha mb-4 mt-2" data-sitekey="6Ld9q8cZAAAAAF2ccmnPbkZjOeGar4GbfZ21MXeb"></div>
+            <div th:if="${captchaError}" class="alert mt-3 alert-danger" th:text="${captchaError}"></div>
         </div>
         <button class="btn btn-primary mb-4" type="submit">Register</button>
     </form>

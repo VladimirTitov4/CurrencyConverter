@@ -7,8 +7,9 @@
 </head>
 <body>
 <div class="container">
-    <div th:text="${message}"></div>
+
     <div th:replace="fragments/common :: navbar"></div>
+    <div class="alert mt-3" th:text="${message}" th:classappend="${messageType}"></div>
     <div sec:authorize="!isAuthenticated()">
 
         <div th:if="${param.error}">
