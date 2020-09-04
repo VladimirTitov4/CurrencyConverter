@@ -6,17 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.titov.smartsoft.entity.ConvertedCurrency;
 import ru.titov.smartsoft.entity.User;
 import ru.titov.smartsoft.service.CurrencyService;
-import ru.titov.smartsoft.util.Converter;
+import ru.titov.smartsoft.util.ConverterUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Locale;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,7 +23,7 @@ public class CurrencyController {
 
     @GetMapping
     public String getCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
-//        currencyService.getXmlAndSaveToDb(user);
+        currencyService.getXmlAndSaveToDb(user);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
         model.addAttribute("history", currencyService.loadHistory(user));
         model.addAttribute("formatter", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
@@ -43,7 +39,7 @@ public class CurrencyController {
             @RequestParam(value = "result", required = false) String result,
             Model model
     ) {
-        ConvertedCurrency cc = Converter.getConvertedCurrencyEntity(user, currency1, currency2, firstValue, result);
+        ConvertedCurrency cc = ConverterUtil.getConvertedCurrencyEntity(user, currency1, currency2, firstValue, result);
         currencyService.saveConversion(cc);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
         model.addAttribute("history", currencyService.loadHistory(user));

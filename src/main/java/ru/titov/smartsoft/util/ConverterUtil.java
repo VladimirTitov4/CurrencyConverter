@@ -8,7 +8,7 @@ import ru.titov.smartsoft.entity.Quote;
 import ru.titov.smartsoft.entity.User;
 
 @UtilityClass
-public class Converter {
+public class ConverterUtil {
 
     public Currency toCurrencyEntity(ValuteDto valute, Quote quote, User user) {
         Currency currency = new Currency();

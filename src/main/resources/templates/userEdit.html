@@ -9,15 +9,25 @@
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
 
-    User Editor
+    <form method="post" th:action="@{/user}" th:object="${user}">
+        <div class="form-row">
+            <div class="form-group col-md-4 mt-4">
+                <label>Имя: </label>
+                <input th:value="${user.getUsername()}" class="form-control" type="text" name="username" />
+            </div>
+        </div>
 
-    <form action="/user" th:object="${user}" method="post">
-        <input type="text" th:value="*{username}" name="username">
-<!--        <div th:each="role : ${user.getRoles()}">-->
-<!--            <label><input type="checkbox" name="${role}">${role}</label>-->
-<!--        </div>-->
-        <input type="text" value="${user.id}" name="userId">
-        <button type="submit">Save</button>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <li th:each="role : ${roles}">
+                    <label th:text="${role}"></label>
+                    <input th:name="${role}" type="checkbox" th:value="${role}"
+                           th:checked="${user.getRoles().contains(role)}" />
+                </li>
+            </div>
+        </div>
+        <input type="hidden" name="userId" th:value="${user.getId()}">
+        <button class="btn btn-primary mb-4" type="submit">Сохранить</button>
     </form>
 
 </div>

@@ -13,7 +13,7 @@ import ru.titov.smartsoft.feign.CurrencyFeignClient;
 import ru.titov.smartsoft.repository.ConvertedCurrencyRepository;
 import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
-import ru.titov.smartsoft.util.Converter;
+import ru.titov.smartsoft.util.ConverterUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class CurrencyService {
             quote.setDate(valcurs.getDate());
             quoteRepository.save(quote);
             for (ValuteDto valute : valcurs.getValutes()) {
-                currencyRepository.save(Converter.toCurrencyEntity(valute, quote, user));
+                currencyRepository.save(ConverterUtil.toCurrencyEntity(valute, quote, user));
             }
         }
     }

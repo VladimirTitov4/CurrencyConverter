@@ -8,26 +8,22 @@
 <body>
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
-
-    List of users:
-
-    <table>
+    <h4>Список пользователей</h4>
+    <table class="table table-striped col-md-4 mt-4">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th></th>
+            <th scope="col">№:</th>
+            <th scope="col">Логин:</th>
+            <th scope=" ">Установленные роли:</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.getUsername()}"></td>
-            <td th:each="role : ${user.getRoles()}">
-                <p th:text="${role}"></p>
-            </td>
-            <td><a href="/user/${user.id}">edit</a></td>
-        </tr>
-
+        <tr th:each="u : ${users}">
+            <td th:text="${u.getId()}"></td>
+            <td th:text="${u.getUsername()}"></td>
+            <td> <th:block th:each="role, iterStat : ${u.getRoles()}" th:text="${!iterStat.last} ? ${role} + ', ' : ${role}"></th:block></td>
+            <td><a th:href="@{/user/{id}(id=${u.getId()})}">edit</a></td>
         </tbody>
     </table>
 
