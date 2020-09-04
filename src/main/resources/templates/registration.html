@@ -9,7 +9,6 @@
 <div class="container">
     <div th:replace="fragments/common :: navbar"></div>
 
-    Add new user
     <div th:if="${param.message}">
         User already exists
     </div>
@@ -19,23 +18,42 @@
     <div th:if="${param.logout}">
         You have been logged out.
     </div>
-    <form th:action="@{/registration}" method="post">
+    <form th:action="@{/registration}" method="post" autocomplete="off">
+
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label"> User Name : </label>
+            <label class="col-sm-2 col-form-label"> User Name: </label>
             <div class="col-sm-3">
-                <input class="form-control" type="text" name="username"/>
+                <input th:classappend="${usernameError} ? 'is-invalid'"
+                       class="form-control" type="text" name="username" placeholder="username"
+                th:value="${user} ? ${user.getUsername()}"/>
+                <div class="invalid-feedback" th:text="${usernameError}"></div>
             </div>
         </div>
 
         <div class="form-group row">
             <label class="col-sm-2 col-form-label"> Password: </label>
             <div class="col-sm-3">
-                <input type="password" name="password"/>
+                <input th:classappend="${passwordError} ? 'is-invalid'" class="form-control" type="password" name="password" placeholder="password"/>
+                <div class="invalid-feedback" th:text="${passwordError}"></div>
             </div>
         </div>
 
-        <button class="btn btn-primary mb-4" type="submit">Register</button>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Retype password: </label>
+            <div class="col-sm-3">
+                <input th:classappend="${password2Error} ? 'is-invalid'" class="form-control" type="password" name="password2" placeholder="Retype password"/>
+                <div class="invalid-feedback" th:text="${password2Error}"></div>
+            </div>
+        </div>
 
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label"> Email:  </label>
+            <div class="col-sm-3">
+                <input th:classappend="${emailError} ? 'is-invalid'" class="form-control" type="email" name="email" placeholder="some@some.com"/>
+                <div class="invalid-feedback" th:text="${emailError}"></div>
+            </div>
+        </div>
+        <button class="btn btn-primary mb-4" type="submit">Register</button>
     </form>
 </div>
 <div th:insert="fragments/common :: footer"></div>
