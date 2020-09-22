@@ -23,10 +23,9 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
-    private final static String CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
 
+    private final static String CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
     private final UserService userService;
-    
     private final RestTemplate restTemplate;
 
     @Value("${recaptcha.secret}")

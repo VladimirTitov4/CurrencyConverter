@@ -22,6 +22,6 @@ public class Quote {
     private String date;
     private String name;
 
-    @OneToMany(mappedBy = "quote", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @OneToMany(mappedBy = "quote", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Currency> currencies;
 }

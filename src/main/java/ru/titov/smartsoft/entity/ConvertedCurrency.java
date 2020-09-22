@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class ConvertedCurrency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String firstCurrency;
@@ -27,7 +27,7 @@ public class ConvertedCurrency {
     @CreationTimestamp
     private LocalDate createdAt;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_FID", referencedColumnName = "USER_ID")
     private User user;
 }

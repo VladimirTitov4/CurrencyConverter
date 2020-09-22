@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Currency {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String valuteId;
@@ -23,11 +23,11 @@ public class Currency {
     private String name;
     private Double value;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_FID", referencedColumnName = "CURRENCY_ID")
     private Quote quote;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_FID", referencedColumnName = "USER_ID")
     private User user;
 }
