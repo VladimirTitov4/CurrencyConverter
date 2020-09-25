@@ -22,7 +22,6 @@ import ru.titov.smartsoft.service.UserService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Override
