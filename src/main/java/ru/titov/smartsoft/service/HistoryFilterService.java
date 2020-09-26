@@ -1,6 +1,8 @@
 package ru.titov.smartsoft.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import ru.titov.smartsoft.entity.ConvertedCurrency;
 import ru.titov.smartsoft.entity.User;
@@ -9,6 +11,13 @@ import ru.titov.smartsoft.repository.ConvertedCurrencyRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
+import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasCreatedAt;
+import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasFirstCurrency;
+import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasSecondCurrency;
+import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasUser;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 @RequiredArgsConstructor
@@ -43,36 +52,38 @@ public class HistoryFilterService {
     }
 
     public List<ConvertedCurrency> loadHistory(User user) {
-        return convertedCurrencyRepository.findAllByUser(user);
+        return convertedCurrencyRepository.findAll(where(hasUser(user)));
     }
 
     public List<ConvertedCurrency> loadHistoryByDate(User user, LocalDate localdate) {
-        return convertedCurrencyRepository.findAllByUserAndCreatedAt(user, localdate);
+        return convertedCurrencyRepository.findAll(where(hasUser(user).and(hasCreatedAt(localdate))));
     }
 
     public List<ConvertedCurrency> loadHistoryByDateAndFirstCurrency(User user, LocalDate localdate, String firstCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndCreatedAtAndFirstCurrency(user, localdate, firstCurrency);
+        return convertedCurrencyRepository.findAll(where(hasFirstCurrency(firstCurrency).and(hasUser(user).and(hasCreatedAt(localdate)))));
     }
 
     public List<ConvertedCurrency> loadHistoryByDateAndSecondCurrency(User user, LocalDate localdate, String secondCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndCreatedAtAndSecondCurrency(user, localdate, secondCurrency);
+        return convertedCurrencyRepository.findAll(where(hasUser(user).and(hasCreatedAt(localdate).and(hasSecondCurrency(secondCurrency)))));
     }
 
     public List<ConvertedCurrency> loadHistoryByAllParams(User user, LocalDate localdate, String firstCurrency, String secondCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndCreatedAtAndFirstCurrencyAndSecondCurrency(
-                user, localdate, firstCurrency, secondCurrency);
+        return convertedCurrencyRepository.findAll(
+                where(hasUser(user)
+                        .and(hasSecondCurrency(secondCurrency)
+                                .and(hasCreatedAt(localdate).and(hasFirstCurrency(firstCurrency))))));
     }
 
     public List<ConvertedCurrency> loadHistoryByFirstCurrencyAndSecondCurrency(User user, String firstCurrency, String secondCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndFirstCurrencyAndSecondCurrency(
-                user, firstCurrency, secondCurrency);
+        return convertedCurrencyRepository.findAll(where(hasUser(user).and(hasFirstCurrency(firstCurrency)
+        .and(hasSecondCurrency(secondCurrency)))));
     }
 
     public List<ConvertedCurrency> loadHistoryByFirstCurrency(User user, String firstCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndFirstCurrency(user, firstCurrency);
+        return convertedCurrencyRepository.findAll(where(hasUser(user).and(hasFirstCurrency(firstCurrency))));
     }
 
     public List<ConvertedCurrency> loadHistoryBySecondCurrency(User user, String secondCurrency) {
-        return convertedCurrencyRepository.findAllByUserAndSecondCurrency(user, secondCurrency);
+        return convertedCurrencyRepository.findAll(where(hasUser(user).and(hasSecondCurrency(secondCurrency))));
     }
 }
