@@ -1,8 +1,6 @@
 package ru.titov.smartsoft.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import ru.titov.smartsoft.entity.ConvertedCurrency;
 import ru.titov.smartsoft.entity.User;
@@ -11,13 +9,9 @@ import ru.titov.smartsoft.repository.ConvertedCurrencyRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
-import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasCreatedAt;
-import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasFirstCurrency;
-import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasSecondCurrency;
-import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.hasUser;
 import static org.springframework.data.jpa.domain.Specification.where;
+import static ru.titov.smartsoft.specification.ConvertedCurrencySpecification.*;
 
 @Service
 @RequiredArgsConstructor

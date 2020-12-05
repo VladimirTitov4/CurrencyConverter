@@ -1,13 +1,10 @@
 package ru.titov.smartsoft.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
 
 @Data
