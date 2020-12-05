@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
                     "Привет %s! \n" +
                             "Добро пожаловать в конвертер валют. \n" +
                             "Для активации аккаунта, пожалуйста, \n" +
-                            "пройдите по следующей : <a href='/79.143.30.125/:8080/activate/%s'>ссылке</a>",
+                            "пройдите по следующей ссылке: 79.143.30.125:8080/activate/%s",
                     user.getUsername(), user.getActivationCode()
             );
 
