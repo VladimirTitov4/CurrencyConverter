@@ -1,6 +1,6 @@
 # CurrencyConverter
 
-to run the application, please clone the repository and run 
+to run the application, please clone the repository, then
+mvn clean install -DskipTests
 docker-compose up
 
-and then go to localhost:8080
