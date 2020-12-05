@@ -1,6 +1,5 @@
 package ru.titov.smartsoft.feign;
 
-
 import feign.Param;
 import feign.RequestLine;
 import ru.titov.smartsoft.dto.CaptchaResponseDto;
