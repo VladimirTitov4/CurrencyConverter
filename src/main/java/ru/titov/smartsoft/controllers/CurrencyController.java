@@ -26,7 +26,7 @@ public class CurrencyController {
     private final HistoryFilterService filterService;
 
     @GetMapping
-    public String getCurrencies(@AuthenticationPrincipal User user, Model model) throws Exception {
+    public String getCurrencies(@AuthenticationPrincipal User user, Model model) {
         currencyService.getXmlAndSaveToDb(user);
         model.addAttribute("currencies", currencyService.loadRecentCurrencies());
         model.addAttribute("history", filterService.loadHistory(user));

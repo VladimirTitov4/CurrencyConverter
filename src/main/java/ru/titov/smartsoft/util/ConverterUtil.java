@@ -23,15 +23,15 @@ public class ConverterUtil {
         return currency;
     }
 
-    public ConvertedCurrency getConvertedCurrencyEntity(User user, String c1, String c2, String amount, String result) {
+    public ConvertedCurrency getConvertedCurrencyEntity(User user, String currencyOne, String currencyTwo, String amount, String result) {
         if (amount.isEmpty()) amount = "1";
         if (result.isEmpty()) result = "1";
-        ConvertedCurrency cc = new ConvertedCurrency();
-        cc.setFirstCurrency(c1.substring(0, c1.indexOf('|')-1));
-        cc.setSecondCurrency(c2.substring(0, c2.indexOf('|')-1));
-        cc.setAmountToConvert(amount);
-        cc.setResult(result);
-        cc.setUser(user);
-        return cc;
+        ConvertedCurrency convertedCurrency = new ConvertedCurrency();
+        convertedCurrency.setFirstCurrency(currencyOne.substring(0, currencyOne.indexOf('|')-1));
+        convertedCurrency.setSecondCurrency(currencyTwo.substring(0, currencyTwo.indexOf('|')-1));
+        convertedCurrency.setAmountToConvert(amount);
+        convertedCurrency.setResult(result);
+        convertedCurrency.setUser(user);
+        return convertedCurrency;
     }
 }
