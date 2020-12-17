@@ -14,7 +14,6 @@ public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
     private String valuteId;
     private int numCode;
     private String charCode;
