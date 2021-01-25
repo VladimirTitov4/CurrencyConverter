@@ -15,7 +15,6 @@ import ru.titov.smartsoft.repository.CurrencyRepository;
 import ru.titov.smartsoft.repository.QuoteRepository;
 import ru.titov.smartsoft.util.ConverterUtil;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,13 +28,24 @@ public class CurrencyService {
     private final ConvertedCurrencyRepository convertedCurrencyRepository;
     private final CurrencyFeignClient currencyFeignClient;
 
-    public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) throws Exception {
+    public void getXmlAndSaveToDb(@AuthenticationPrincipal User user) {
         ValcursDto valcurs = currencyFeignClient.getXmlDaily();
         if (!checkIsUpToDate(valcurs)) {
             Quote quote = new Quote();
             quote.setName(valcurs.getName());
             quote.setDate(valcurs.getDate());
             quoteRepository.save(quote);
+            Currency rubleCurrency = new Currency();
+            rubleCurrency.setId(1L);
+            rubleCurrency.setValuteId("R00000");
+            rubleCurrency.setNumCode(1);
+            rubleCurrency.setCharCode("RUB");
+            rubleCurrency.setNominal(1);
+            rubleCurrency.setName("Российский рубль");
+            rubleCurrency.setValue(1.0);
+            rubleCurrency.setUser(user);
+            rubleCurrency.setQuote(quote);
+            currencyRepository.save(rubleCurrency);
             for (ValuteDto valute : valcurs.getValutes()) {
                 currencyRepository.save(ConverterUtil.toCurrencyEntity(valute, quote, user));
             }
@@ -44,7 +54,7 @@ public class CurrencyService {
 
     public boolean checkIsUpToDate(ValcursDto valcurs) {
         Quote lastQuote = quoteRepository.findFirstByOrderByIdDesc();
-        if (lastQuote == null) {
+        if (null == lastQuote) {
             System.out.println("Found nothing, saving quotes for the first time");
             return false;
         }
@@ -57,11 +67,6 @@ public class CurrencyService {
         if (DBDate.isBefore(CBRDate)) {
             System.out.println("Date is expired, saving new quotes");
             return false;
-        }
-        if (DBDate.getDayOfWeek() == DayOfWeek.MONDAY
-                && CBRDate.getDayOfWeek() == DayOfWeek.SATURDAY) {
-            System.out.println("Today is Monday and current quotes are good");
-            return true;
         }
         return false;
     }

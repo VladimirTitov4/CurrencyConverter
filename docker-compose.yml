@@ -6,11 +6,6 @@ services:
     build: ./
     ports:
       - "8080:8080"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.001'
-          memory: 1500M
     depends_on:
       - dbpostgresql
   dbpostgresql:
@@ -21,3 +16,5 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=mydb
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
