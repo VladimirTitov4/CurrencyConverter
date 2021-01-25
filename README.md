@@ -9,7 +9,7 @@
 Запуск приложения:
 1. git clone https://github.com/VladimirTitov4/CurrencyConverter.git
 2. cd CurrencyConverter
-3. ./mvnw clean install
+3. ./mvnw clean install -DskipTests
 4. sudo docker-compose up -d
 5. Открыть в браузере http://localhost:8080/
 
